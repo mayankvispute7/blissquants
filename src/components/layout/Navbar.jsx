@@ -1,86 +1,102 @@
 import React, { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
-import { Sun, Moon } from 'lucide-react';
-
-const TradingIcon = () => (
-  <div className="flex items-end gap-[2px] h-3 w-3 overflow-hidden group-hover:opacity-100 opacity-70 transition-opacity">
-    <motion.div className="w-1 bg-light rounded-sm" initial={{ height: "40%" }} whileHover={{ height: ["40%", "80%", "40%"] }} transition={{ duration: 0.6, repeat: Infinity }} />
-    <motion.div className="w-1 bg-light rounded-sm" initial={{ height: "60%" }} whileHover={{ height: ["60%", "100%", "60%"] }} transition={{ duration: 0.6, repeat: Infinity, delay: 0.1 }} />
-    <motion.div className="w-1 bg-primary rounded-sm" initial={{ height: "100%" }} whileHover={{ height: ["100%", "40%", "100%"] }} transition={{ duration: 0.6, repeat: Infinity, delay: 0.2 }} />
-  </div>
-);
+import { motion, AnimatePresence } from 'framer-motion';
+import { Menu, X, Sun } from 'lucide-react';
 
 export default function Navbar() {
-  const [scrolled, setScrolled] = useState(false);
-  const [isDarkMode, setIsDarkMode] = useState(true);
+  const [isScrolled, setIsScrolled] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
+  // Wealthsimple style: Navbar gets a subtle background blur when scrolling
   useEffect(() => {
-    const handleScroll = () => {
-      setScrolled(window.scrollY > 50);
-    };
+    const handleScroll = () => setIsScrolled(window.scrollY > 20);
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const navLinks = [
-    { name: 'Home', href: '#' },
-    { name: 'Trade', href: '#' },
-    { name: 'Investment', href: '#' },
-    { name: 'Education', href: '#' },
-    { name: 'About', href: '#' },
-  ];
+  const navLinks = ["HOME", "TRADE", "INVESTMENT", "EDUCATION", "ABOUT"];
 
   return (
-    <motion.nav
-      initial={{ y: -100 }}
-      animate={{ y: 0 }}
-      transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1], delay: 3.5 }}
-      // Reduced padding: py-3 when scrolled, py-4 when at top (was py-4 / py-6)
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        scrolled ? 'py-3 glass-panel border-b border-white/5 shadow-xl' : 'py-4 bg-transparent'
+    <nav 
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
+        isScrolled ? 'bg-[#3B3531]/90 backdrop-blur-md py-4 shadow-sm' : 'bg-transparent py-6'
       }`}
     >
       <div className="max-w-7xl mx-auto px-6 md:px-12 flex items-center justify-between">
         
-        <div className="flex items-center gap-2 cursor-pointer group">
-          {/* Made logo slightly smaller */}
-          <div className="w-7 h-7 bg-primary rounded-sm flex items-center justify-center font-bold text-dark text-lg font-serif">
-            B
+        {/* Logo Section - Ready for provided image */}
+        <div className="flex items-center gap-2 cursor-pointer">
+          {/* REPLACE the src below with your actual logo path (e.g., "/logo.png") */}
+          <div className="w-8 h-8 bg-[#84C225] flex items-center justify-center rounded-sm">
+            <span className="text-[#3B3531] font-black text-xl">B</span>
           </div>
-          <span className="font-serif text-lg font-semibold text-light tracking-tight">
-            BlissQuants
-          </span>
+          <span className="text-white font-bold text-xl tracking-tight">BlissQuants</span>
         </div>
 
-        <div className="hidden md:flex items-center gap-6">
+        {/* Desktop Links (Centered, minimal, tight spacing like Wealthsimple) */}
+        <div className="hidden md:flex items-center gap-8">
           {navLinks.map((link) => (
-            <a
-              key={link.name}
-              href={link.href}
-              // Reduced link text size to text-xs
-              className="text-xs font-sans font-bold uppercase tracking-widest text-grey/80 hover:text-primary transition-colors duration-200"
+            <a 
+              key={link} 
+              href={`#${link.toLowerCase()}`}
+              className="text-[11px] font-bold text-white/80 hover:text-white uppercase tracking-[0.15em] transition-colors duration-300"
             >
-              {link.name}
+              {link}
             </a>
           ))}
         </div>
 
-        <div className="hidden md:flex items-center gap-5">
-          <button onClick={() => setIsDarkMode(!isDarkMode)} className="text-grey/80 hover:text-primary transition-colors">
-            {isDarkMode ? <Sun size={16} /> : <Moon size={16} />}
+        {/* Desktop Actions */}
+        <div className="hidden md:flex items-center gap-6">
+          <button className="text-white/80 hover:text-white transition-colors">
+            <Sun size={18} />
           </button>
-          
-          <button className="group flex items-center gap-1.5 text-xs font-sans font-bold uppercase tracking-widest text-light hover:text-primary transition-colors">
-            <TradingIcon />
+          <button className="text-[12px] font-bold text-white uppercase tracking-wider hover:opacity-70 transition-opacity">
             Login
           </button>
-          
-          {/* Reduced button padding and text size */}
-          <button className="px-5 py-2 bg-primary text-dark font-sans font-bold text-xs uppercase tracking-widest rounded-full hover:scale-105 transition-transform duration-300">
+          <button className="bg-[#84C225] text-[#3B3531] text-[12px] font-bold uppercase tracking-wider px-6 py-2.5 rounded-full hover:bg-[#95D600] transition-colors duration-300">
             Get Started
           </button>
         </div>
+
+        {/* Mobile Menu Toggle */}
+        <button 
+          className="md:hidden text-white"
+          onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+        >
+          {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+        </button>
+
       </div>
-    </motion.nav>
+
+      {/* Mobile Menu Dropdown */}
+      <AnimatePresence>
+        {mobileMenuOpen && (
+          <motion.div 
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            className="absolute top-full left-0 w-full bg-[#3B3531] shadow-2xl py-6 px-6 flex flex-col gap-6 md:hidden border-t border-white/10"
+          >
+            {navLinks.map((link) => (
+              <a 
+                key={link} 
+                href={`#${link.toLowerCase()}`}
+                className="text-sm font-bold text-white/80 hover:text-[#84C225] uppercase tracking-widest transition-colors duration-300"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                {link}
+              </a>
+            ))}
+            <div className="w-full h-px bg-white/10 my-2"></div>
+            <button className="text-sm font-bold text-white uppercase tracking-widest text-left">
+              Login
+            </button>
+            <button className="bg-[#84C225] text-[#3B3531] text-sm font-bold uppercase tracking-widest px-6 py-3 rounded-full text-center">
+              Get Started
+            </button>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </nav>
   );
 }

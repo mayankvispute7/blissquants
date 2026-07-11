@@ -1,124 +1,169 @@
-import React from 'react';
+import React, { useState, useRef } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
-import { ArrowRight } from 'lucide-react';
 
-const HoverLetterStagger = ({ text, delayOffset = 0, className = "" }) => {
-  const words = text.split(" ");
+// Premium Background Chart Lines
+const AnimatedChartLines = () => (
+  <div className="absolute inset-0 overflow-hidden pointer-events-none z-10">
+    <svg className="w-full h-full opacity-40" preserveAspectRatio="none" viewBox="0 0 1440 600">
+      <motion.path
+        d="M -100 250 C 200 350, 300 150, 500 250 C 700 350, 800 150, 1000 250 C 1200 350, 1300 200, 1500 250"
+        fill="transparent"
+        stroke="#FFFFFF"
+        strokeWidth="1"
+        initial={{ pathLength: 0, opacity: 0 }}
+        animate={{ pathLength: 1, opacity: 0.08 }}
+        transition={{ duration: 4, ease: "easeInOut", repeat: Infinity, repeatType: "reverse" }}
+      />
+      <motion.path
+        d="M -100 450 C 200 450, 300 250, 500 350 C 700 450, 800 150, 1000 250 C 1200 350, 1300 100, 1500 150"
+        fill="transparent"
+        stroke="#84C225"
+        strokeWidth="2"
+        initial={{ pathLength: 0, opacity: 0 }}
+        animate={{ pathLength: 1, opacity: 0.4 }}
+        transition={{ duration: 5, ease: "easeInOut", delay: 0.5, repeat: Infinity, repeatType: "reverse" }}
+      />
+    </svg>
+  </div>
+);
+
+// The "Dancing" Interactive Letter Component
+const InteractiveLetter = ({ char }) => {
+  const dodgeX = Math.random() > 0.5 ? 4 : -4;
+  const dodgeY = Math.random() > 0.5 ? 4 : -4;
+
   return (
-    <span className={`flex justify-center flex-nowrap whitespace-nowrap ${className}`}>
-      {words.map((word, wordIndex) => (
-        <span key={wordIndex} className="overflow-hidden inline-flex mr-[0.25em] pb-2 cursor-crosshair">
-          <motion.span
-            initial={{ opacity: 0, y: "100%" }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{
-              duration: 1.2,
-              ease: [0.22, 1, 0.36, 1],
-              delay: delayOffset + (wordIndex * 0.15)
-            }}
-          >
-            <motion.span className="inline-flex relative" initial="initial" whileHover="hovered">
-              <span className="inline-flex">
-                {word.split("").map((letter, letterIndex) => (
-                  <motion.span
-                    key={letterIndex}
-                    variants={{ initial: { y: 0 }, hovered: { y: "-100%" } }}
-                    transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1], delay: letterIndex * 0.02 }}
-                    className="inline-block origin-bottom"
-                  >
-                    {letter}
-                  </motion.span>
-                ))}
-              </span>
-              <span className="absolute inset-0 inline-flex">
-                {word.split("").map((letter, letterIndex) => (
-                  <motion.span
-                    key={letterIndex}
-                    variants={{ initial: { y: "100%" }, hovered: { y: 0 } }}
-                    transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1], delay: letterIndex * 0.02 }}
-                    className="inline-block origin-bottom"
-                  >
-                    {letter}
-                  </motion.span>
-                ))}
-              </span>
-            </motion.span>
-          </motion.span>
-        </span>
+    <motion.span
+      whileHover={{ 
+        x: dodgeX, 
+        y: dodgeY, 
+        scale: 1.05,
+        rotate: (Math.random() - 0.5) * 3 
+      }}
+      transition={{ type: "spring", stiffness: 400, damping: 10, mass: 0.5 }}
+      className="inline-block cursor-default"
+    >
+      {char === " " ? "\u00A0" : char}
+    </motion.span>
+  );
+};
+
+const DancingText = ({ text, className }) => {
+  return (
+    <span className={`inline-block ${className}`}>
+      {text.split("").map((char, index) => (
+        <InteractiveLetter key={index} char={char} />
       ))}
     </span>
   );
 };
 
 export default function Hero() {
-  const { scrollY } = useScroll();
+  // Track mouse position for the spotlight effect
+  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   
-  const scale = useTransform(scrollY, [0, 800], [1, 0.85]);
-  const opacity = useTransform(scrollY, [0, 800], [1, 0.3]);
-  const blur = useTransform(scrollY, [0, 800], ["blur(0px)", "blur(15px)"]);
+  // 1. Scroll Tracking Logic for the Zoom Out Effect
+  const sectionRef = useRef(null);
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ["start start", "end start"]
+  });
+  
+  // As the user scrolls, shrink the hero to 85% and fade it out slightly
+  const scale = useTransform(scrollYProgress, [0, 1], [1, 0.85]);
+  const opacity = useTransform(scrollYProgress, [0, 1], [1, 0.3]);
+
+  const handleMouseMove = (e) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    setMousePosition({
+      x: e.clientX - rect.left,
+      y: e.clientY - rect.top,
+    });
+  };
 
   return (
-    <section className="sticky top-0 z-0 h-[100dvh] w-full flex flex-col items-center justify-center overflow-hidden bg-dark">
+    // h-[150vh] gives extra scroll distance, z-10 ensures it stays UNDER the Features page
+    <section ref={sectionRef} className="relative z-10 bg-[#3B3531] h-[150vh]">
       
-      <motion.div 
-        className="absolute inset-0 z-0 pointer-events-none"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 2, ease: "easeOut", delay: 0.2 }}
+      {/* Sticky container locks exactly into 1 viewport height (100vh) */}
+      <div 
+        onMouseMove={handleMouseMove}
+        className="sticky top-0 h-screen w-full overflow-hidden bg-[#3B3531]"
       >
-        <video autoPlay loop muted playsInline className="w-full h-full object-cover opacity-30">
-          <source src="/trading.mp4" type="video/mp4" />
-        </video>
-        <div className="absolute inset-0 bg-dark/80"></div>
-      </motion.div>
-
-      <motion.div 
-        style={{ scale, opacity, filter: blur }}
-        className="relative z-10 flex flex-col items-center justify-center text-center px-6 w-full max-w-5xl mx-auto origin-center"
-      >
+        
+        {/* Animated Wrapper for the Scroll Zoom effect */}
         <motion.div 
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1, delay: 1.5 }}
-          className="mb-8"
+          style={{ scale, opacity }}
+          className="relative w-full h-full flex flex-col items-center justify-center origin-top"
         >
-          <span className="glass-panel px-4 py-2 rounded-full text-[10px] sm:text-xs font-numbers text-primary tracking-widest uppercase border border-primary/20 shadow-[0_0_15px_rgba(149,214,0,0.05)]">
-            The BlissQuants Platform
-          </span>
+          {/* 🚀 Magical Cursor Spotlight Effect */}
+          <div 
+            className="pointer-events-none absolute inset-0 z-0 transition-opacity duration-300"
+            style={{
+              background: `radial-gradient(600px circle at ${mousePosition.x}px ${mousePosition.y}px, rgba(132, 194, 37, 0.15), transparent 80%)`
+            }}
+          />
+
+          <AnimatedChartLines />
+
+          {/* Main Content Layout */}
+          <div className="relative z-30 w-full max-w-7xl mx-auto px-6 sm:px-8 flex flex-col items-center justify-center text-center pt-32 pb-20 mt-10 md:mt-0 pointer-events-none">
+            
+            {/* Enable pointer events on interactive elements so they can be hovered/clicked */}
+            <div className="pointer-events-auto flex flex-col items-center">
+              
+              {/* Subtitle Pill */}
+              <motion.div
+                initial={{ opacity: 0, y: 15 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+                className="mb-6 md:mb-8"
+              >
+                <span className="px-5 py-2 border border-[#84C225]/30 rounded-full text-[#84C225] text-[10px] md:text-[11px] font-bold uppercase tracking-[0.2em] bg-[#84C225]/5 backdrop-blur-sm">
+                  Delta Hedging & Software Solutions
+                </span>
+              </motion.div>
+
+              {/* Wise.com Style Typography */}
+              <motion.h1 
+                initial={{ opacity: 0, y: 15 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+                className="flex flex-col items-center text-[3.5rem] sm:text-[4.5rem] md:text-[5.5rem] lg:text-[6.5rem] font-black tracking-[-0.04em] md:tracking-[-0.06em] leading-[0.95] md:leading-[0.9] mb-8"
+              >
+                <DancingText text="MASTER WEALTH." className="text-[#FFFFFF]" />
+                <DancingText text="CONQUER FEAR." className="text-[#84C225]" />
+              </motion.h1>
+
+              {/* Description Text */}
+              <motion.p 
+                initial={{ opacity: 0, y: 15 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+                className="text-sm sm:text-base md:text-lg font-sans text-[#FFFFFF]/70 leading-relaxed max-w-[95%] sm:max-w-xl md:max-w-2xl mx-auto mb-10 md:mb-12 font-medium"
+              >
+                Benefit through hedging the risk. We combine institutional-grade quantitative analysis with relentless innovation to protect and grow your capital in any market condition.
+              </motion.p>
+
+              {/* Action Buttons */}
+              <motion.div 
+                initial={{ opacity: 0, y: 15 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+                className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-6 w-full sm:w-auto px-4 sm:px-0"
+              >
+                <button className="w-full sm:w-auto bg-[#84C225] text-[#3B3531] font-sans font-bold text-sm md:text-base px-8 md:px-10 py-3.5 md:py-4 rounded-full transition-transform duration-500 ease-[0.16,1,0.3,1] hover:scale-105 hover:bg-[#95D600]">
+                  Start Your Journey
+                </button>
+                <button className="w-full sm:w-auto bg-transparent text-[#FFFFFF] border border-[#FFFFFF]/20 font-sans font-medium text-sm md:text-base px-8 md:px-10 py-3.5 md:py-4 rounded-full transition-all duration-500 ease-[0.16,1,0.3,1] hover:bg-[#FFFFFF]/5 hover:border-[#FFFFFF]/50 hover:text-white">
+                  Explore Offerings
+                </button>
+              </motion.div>
+
+            </div>
+          </div>
         </motion.div>
-
-        <h1 className="text-4xl sm:text-6xl md:text-7xl lg:text-[6.5rem] font-heading uppercase tracking-tighter leading-[0.95] mb-8 flex flex-col items-center w-full">
-          <HoverLetterStagger text="MASTER WEALTH." delayOffset={1.8} className="text-light" />
-          {/* Updated text to match the new demo */}
-          <HoverLetterStagger text="CONQUER FEAR." delayOffset={2.2} className="text-primary mt-1 md:mt-2" />
-        </h1>
-
-        <motion.p 
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 1.5, delay: 3 }}
-          className="text-base md:text-lg font-sans font-medium text-grey/60 max-w-3xl mb-12 leading-relaxed px-4"
-        >
-          {/* Updated paragraph to match the new demo exactly */}
-          Trade fearlessly. Build wealth intelligently. Master finance completely. BlissQuants delivers the strategies, planning, and education you need to own your financial future.
-        </motion.p>
-
-        <motion.div 
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1, delay: 3.2 }}
-          className="flex flex-col sm:flex-row items-center gap-5"
-        >
-          <button className="group relative px-8 py-4 bg-primary text-dark font-sans font-bold text-base uppercase tracking-wide rounded-full overflow-hidden transition-all duration-300 hover:scale-105 flex items-center gap-2">
-            Explore Platform
-            <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
-          </button>
-          
-          <button className="group px-8 py-4 glass-panel text-light font-sans font-bold text-base uppercase tracking-wide rounded-full transition-all duration-300 hover:bg-white/10 flex items-center gap-2 border border-white/10 hover:border-white/30">
-            Experience BlissQuants
-          </button>
-        </motion.div>
-      </motion.div>
+      </div>
     </section>
   );
 }

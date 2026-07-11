@@ -1,7 +1,8 @@
 import React, { useRef } from 'react';
-import { motion, useScroll, useTransform } from 'framer-motion';
+import { motion, useScroll, useTransform, useSpring } from 'framer-motion';
 import { Activity, Target, ShieldCheck, GraduationCap, CheckCircle2, BookOpen } from 'lucide-react';
 
+// Light Theme Animated Chart Lines
 const AnimatedChartLines = () => (
   <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
     <svg className="w-full h-full opacity-40" preserveAspectRatio="none" viewBox="0 0 1440 600">
@@ -29,174 +30,193 @@ const AnimatedChartLines = () => (
   </div>
 );
 
-export default function Features() {
-  const smoothEase = [0.22, 1, 0.36, 1];
+// Feature Content
+const features = [
+  {
+    id: 1,
+    icon: <ShieldCheck size={20} />,
+    title: "The BlissQuants Vibe",
+    image: "https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?q=80&w=2070&auto=format&fit=crop",
+    desc: "A sophisticated approach that eliminates the usual stress of the markets. Empower yourself with confidence-building data.",
+    bullets: ['Analytical Clarity', 'Confidence Building', 'Stress-Free Focus'],
+    rotation: -3
+  },
+  {
+    id: 2,
+    icon: <Activity size={20} />,
+    title: "Data-Driven Strategy",
+    image: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=2070&auto=format&fit=crop",
+    desc: "Where active traders build and backtest sophisticated strategies. Get hands-on with quantitative analytics.",
+    bullets: ['Quantitative Tools', 'Volatility Control', 'Active Backtesting'],
+    rotation: 2
+  },
+  {
+    id: 3,
+    icon: <Target size={20} />,
+    title: "Long-Term Vision",
+    image: "https://images.unsplash.com/photo-1600880292203-757bb62b4baf?q=80&w=2070&auto=format&fit=crop",
+    desc: "Plan your financial future, not just your next trade. Comprehensive tools for long-term goal-setting.",
+    bullets: ['Retirement Planning', 'Goal Setting', 'Lifestyle Wealth'],
+    rotation: -2
+  },
+  {
+    id: 4,
+    icon: <GraduationCap size={20} />,
+    title: "Finance Academy",
+    image: "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?q=80&w=2071&auto=format&fit=crop",
+    desc: "Upskill with our premier education-focused academy. Learn directly from seasoned experts in structured courses.",
+    bullets: ['Structured Courses', 'Expert Instructors', 'Advanced Certs'],
+    rotation: 3
+  },
+  {
+    id: 5,
+    icon: <BookOpen size={20} />,
+    title: "Master the Science",
+    image: "https://images.unsplash.com/photo-1589829085413-56de8ae18c73?q=80&w=2070&auto=format&fit=crop", 
+    desc: "Unlock continuous learning with in-depth tutorials and authoritative publications.",
+    bullets: ['In-Depth Tutorials', 'Authoritative Pubs', 'Data Mastery'],
+    rotation: -1
+  }
+];
 
-  // 1. Scroll Tracking Logic for the Zoom Out Effect
-  const sectionRef = useRef(null);
-  const { scrollYProgress } = useScroll({
-    target: sectionRef,
-    offset: ["start start", "end start"]
-  });
-  
-  // As the user scrolls past, shrink to 85% and fade
-  const scale = useTransform(scrollYProgress, [0, 1], [1, 0.85]);
-  const opacity = useTransform(scrollYProgress, [0, 1], [1, 0.4]);
+// Horizontal Feature Card Component
+const StackingCard = ({ feature, index, smoothProgress }) => {
+  const dropStart = index === 0 ? 0 : 0.05 + ((index - 1) * 0.15); 
+  const dropEnd = index === 0 ? 0 : dropStart + 0.15;
 
-  const features = [
-    {
-      id: 1,
-      icon: <ShieldCheck size={24} />,
-      title: "The BlissQuants Vibe",
-      image: "https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?q=80&w=2070&auto=format&fit=crop",
-      desc: "A sophisticated approach that eliminates the usual stress of the markets. Empower yourself with confidence-building data, replacing anxiety with analytical clarity and long-term peace of mind.",
-      bullets: ['Analytical Clarity', 'Confidence Building', 'Stress-Free Focus']
-    },
-    {
-      id: 2,
-      icon: <Activity size={24} />,
-      title: "Data-Driven Strategy",
-      image: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=2070&auto=format&fit=crop",
-      desc: "Where active traders build and backtest sophisticated strategies. Get hands-on with quantitative analytics and disciplined tools designed to stop market volatility in its tracks.",
-      bullets: ['Quantitative Tools', 'Volatility Control', 'Active Backtesting']
-    },
-    {
-      id: 3,
-      icon: <Target size={24} />,
-      title: "Long-Term Wealth Vision",
-      image: "https://images.unsplash.com/photo-1600880292203-757bb62b4baf?q=80&w=2070&auto=format&fit=crop",
-      desc: "Plan your financial future, not just your next trade. Comprehensive tools for long-term goal-setting, retirement planning, and lifestyle-based wealth strategies for the next 5 to 10 years.",
-      bullets: ['Retirement Planning', 'Goal Setting', 'Lifestyle Wealth']
-    },
-    {
-      id: 4,
-      icon: <GraduationCap size={24} />,
-      title: "Finance Academy Excellence",
-      image: "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?q=80&w=2071&auto=format&fit=crop",
-      desc: "Upskill with our premier education-focused academy. Whether you're new to systematic finance or earning advanced certifications, learn directly from seasoned experts in structured courses.",
-      bullets: ['Structured Courses', 'Expert Instructors', 'Advanced Certifications']
-    },
-    {
-      id: 5,
-      icon: <BookOpen size={24} />,
-      title: "Master the Science",
-      image: "https://images.unsplash.com/photo-1589829085413-56de8ae18c73?q=80&w=2070&auto=format&fit=crop", 
-      desc: "Unlock continuous learning with in-depth tutorials and authoritative publications. Dive into the mechanics of data-driven market mastery and never let fear dictate your financial decisions again.",
-      bullets: ['In-Depth Tutorials', 'Authoritative Pubs', 'Data-Driven Mastery']
-    }
-  ];
+  const y = useTransform(
+    smoothProgress,
+    [dropStart, dropEnd],
+    index === 0 ? ["0vh", "0vh"] : ["-130vh", "0vh"]
+  );
+
+  const opacity = useTransform(
+    smoothProgress,
+    [dropStart, dropEnd - 0.05],
+    index === 0 ? [1, 1] : [0, 1]
+  );
 
   return (
-    // h-[200vh] increases the scroll delay so you have plenty of time to view the cards before the next page appears
-    <section ref={sectionRef} className="bg-[#F4F4F0] h-[200vh] relative z-20 rounded-t-[3rem] md:rounded-t-[4rem] shadow-[0_-30px_60px_rgba(0,0,0,0.2)]">
-      
-      {/* Sticky container locks exactly into 1 viewport height (100vh) */}
-      <div className="sticky top-0 h-screen w-full overflow-hidden">
-        
-        {/* Animated Wrapper for the Scroll Zoom effect */}
-        {/* pt-20 and pb-10 provide a tight, safe padding so nothing gets pushed off screen */}
-        <motion.div 
-          style={{ scale, opacity }} 
-          className="relative w-full h-full pt-20 pb-10 md:pt-24 md:pb-12 flex flex-col justify-center"
-        >
-          <AnimatedChartLines />
-
-          {/* Core Content Container */}
-          <div className="max-w-7xl mx-auto px-6 relative z-10 flex flex-col w-full h-full justify-between gap-6">
-            
-            {/* Header Content */}
-            <div className="max-w-2xl shrink-0">
-              <motion.h2 
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, amount: 0.2 }}
-                transition={{ duration: 0.8, ease: smoothEase }}
-                className="text-xs font-sans font-bold text-primary uppercase tracking-widest mb-3"
-              >
-                Fearless Finance Mastery
-              </motion.h2>
-              
-              <motion.h3 
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, amount: 0.2 }}
-                transition={{ duration: 0.8, delay: 0.1, ease: smoothEase }}
-                className="text-4xl md:text-5xl lg:text-6xl font-heading text-[#33312E] tracking-tight leading-[1.1] mb-4"
-              >
-                Sophisticated,<br/>
-                Yet Fearless.
-              </motion.h3>
-
-              <motion.p
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, amount: 0.2 }}
-                transition={{ duration: 0.8, delay: 0.2, ease: smoothEase }}
-                className="text-sm md:text-base font-sans font-medium text-dark/70 leading-relaxed mb-6 max-w-xl"
-              >
-                Conquer the markets without the usual stress. BlissQuants empowers you to replace financial anxiety with data-driven confidence.
-              </motion.p>
-
-              <motion.button
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, amount: 0.2 }}
-                transition={{ duration: 0.8, delay: 0.3, ease: smoothEase }}
-                className="group inline-flex items-center gap-2 px-8 py-3.5 bg-primary text-white font-sans font-bold text-sm rounded-full transition-transform hover:scale-105 shadow-[0_4px_14px_rgba(149,214,0,0.3)]"
-              >
-                Experience BlissQuants <span className="group-hover:translate-x-1 transition-transform">→</span>
-              </motion.button>
-            </div>
-
-            {/* 5-Card Expanding Slider Layout */}
-            {/* flex-1 ensures it dynamically fills the remaining screen space perfectly without spilling over */}
-            <div className="flex flex-col lg:flex-row w-full gap-3 md:gap-4 flex-1 min-h-[300px] max-h-[500px] shrink-0 group/grid">
-              {features.map((feature, index) => (
-                <motion.div
-                  key={feature.id}
-                  initial={{ opacity: 0, y: 50 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true, amount: 0.1 }}
-                  transition={{ duration: 0.8, delay: 0.2 + (index * 0.15), ease: smoothEase }}
-                  className="group/card relative flex-1 hover:flex-[3] transition-all duration-700 ease-[0.22,1,0.36,1] overflow-hidden rounded-[2rem] bg-dark shadow-lg cursor-pointer h-full group-hover/grid:opacity-40 group-hover/grid:blur-sm hover:!opacity-100 hover:!blur-none"
-                >
-                  <img 
-                    src={feature.image} 
-                    alt={feature.title} 
-                    className={`absolute inset-0 w-full h-full object-cover opacity-30 group-hover/card:opacity-70 group-hover/card:scale-105 transition-all duration-700 ${feature.id === 5 ? 'mix-blend-luminosity brightness-75 sepia hue-rotate-90 saturate-200' : ''}`} 
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-dark/95 via-dark/50 to-transparent"></div>
-
-                  <div className="absolute inset-0 p-5 lg:p-6 flex flex-col justify-end">
-                    <div className="flex items-center gap-4 mb-2 lg:mb-0 lg:block">
-                      <div className="w-10 h-10 bg-primary/20 backdrop-blur-md rounded-xl flex items-center justify-center text-primary lg:mb-4 shrink-0 transition-colors group-hover/card:bg-primary group-hover/card:text-dark">
-                        {feature.icon}
-                      </div>
-                      <h4 className="text-lg lg:text-xl font-heading text-light uppercase whitespace-nowrap overflow-hidden text-ellipsis">
-                        {feature.title}
-                      </h4>
-                    </div>
-
-                    <div className="lg:h-0 lg:opacity-0 lg:-translate-y-4 group-hover/card:h-auto group-hover/card:opacity-100 group-hover/card:translate-y-0 transition-all duration-700 delay-100 overflow-hidden">
-                      <p className="text-xs lg:text-sm font-sans font-medium text-light/70 mt-3 mb-3 lg:mb-4 line-clamp-3">
-                        {feature.desc}
-                      </p>
-                      <ul className="space-y-1.5 lg:space-y-2">
-                        {feature.bullets.map((bullet, i) => (
-                          <li key={i} className="flex items-center gap-2 text-light/90 text-[10px] lg:text-xs font-sans">
-                            <CheckCircle2 size={12} className="text-primary shrink-0"/> {bullet}
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  </div>
-                </motion.div>
-              ))}
-            </div>
-            
-          </div>
-        </motion.div>
+    <motion.div 
+      style={{ y, opacity, zIndex: index }}
+      initial={{ rotate: feature.rotation }}
+      whileHover={{ 
+        scale: 1.05, 
+        rotate: 0, 
+        zIndex: 50,
+        boxShadow: "0 40px 80px -15px rgba(0,0,0,0.6)" 
+      }}
+      transition={{ type: "spring", stiffness: 300, damping: 25 }}
+      // Card Container
+      className="absolute top-0 left-0 right-0 bottom-0 m-auto w-[92vw] md:w-[580px] lg:w-[620px] h-[480px] md:h-[340px] bg-[#1A1A1A] rounded-2xl md:rounded-3xl shadow-[0_20px_50px_-10px_rgba(0,0,0,0.4)] overflow-hidden flex flex-col md:flex-row border border-white/10"
+    >
+      {/* Image Section: Smooth Gradient Fade into the text section */}
+      <div className="relative h-[35%] md:h-full md:w-[45%] overflow-hidden shrink-0">
+        <motion.img 
+          whileHover={{ scale: 1.1 }}
+          transition={{ duration: 0.8 }}
+          src={feature.image} 
+          alt={feature.title} 
+          className="absolute inset-0 w-full h-full object-cover opacity-70"
+        />
+        {/* The Magic Fade: Blends perfectly into #1A1A1A on the bottom (mobile) or right (desktop) */}
+        <div className="absolute inset-0 bg-gradient-to-b md:bg-gradient-to-r from-transparent via-[#1A1A1A]/30 to-[#1A1A1A]"></div>
       </div>
+
+      {/* Content Section */}
+      <div className="flex flex-col p-5 md:p-6 h-[65%] md:h-full md:w-[55%] justify-between z-10">
+        <div>
+          <div className="flex items-center gap-3 mb-3 md:mb-4">
+            <div className="w-10 h-10 rounded-lg bg-[#84C225]/10 flex items-center justify-center text-[#84C225] border border-[#84C225]/20 shrink-0">
+              {feature.icon}
+            </div>
+            <h4 className="text-lg md:text-xl font-black text-white uppercase tracking-tight leading-tight">
+              {feature.title}
+            </h4>
+          </div>
+          
+          <p className="text-xs md:text-sm font-sans text-white/60 leading-relaxed line-clamp-3 mb-4">
+            {feature.desc}
+          </p>
+        </div>
+
+        {/* Feature Bullets - Now Interactive! */}
+        <div className="flex flex-col gap-2">
+          {feature.bullets.map((bullet, i) => (
+            <div 
+              key={i} 
+              className="group/bullet flex items-center gap-2.5 bg-white/5 border border-white/5 rounded-md p-2 transition-all duration-300 hover:bg-[#84C225]/10 hover:border-[#84C225]/30 hover:shadow-[0_0_10px_rgba(132,194,37,0.1)] cursor-pointer"
+            >
+              <CheckCircle2 size={14} className="text-[#84C225] shrink-0 transition-transform duration-300 group-hover/bullet:scale-125"/> 
+              <span className="text-white/70 text-[11px] md:text-xs font-sans font-medium transition-colors duration-300 group-hover/bullet:text-white">
+                {bullet}
+              </span>
+            </div>
+          ))}
+        </div>
+      </div>
+    </motion.div>
+  );
+};
+
+export default function Features() {
+  const containerRef = useRef(null);
+  
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start start", "end end"]
+  });
+
+  const smoothProgress = useSpring(scrollYProgress, {
+    stiffness: 80,
+    damping: 20,
+    mass: 1
+  });
+
+  const sectionScale = useTransform(smoothProgress, [0.85, 1], [1, 0.85]);
+  const sectionOpacity = useTransform(smoothProgress, [0.85, 1], [1, 0.3]);
+
+  return (
+    <section ref={containerRef} className="relative bg-[#F4F4F0] h-[600vh] z-10">
+      
+      <motion.div 
+        style={{ scale: sectionScale, opacity: sectionOpacity }}
+        className="sticky top-0 h-screen w-full flex flex-col md:flex-row items-center justify-between overflow-hidden px-6 md:px-12 py-12 md:py-0 origin-top"
+      >
+        
+        <AnimatedChartLines />
+
+        <div className="relative z-10 w-full md:w-[45%] flex flex-col justify-center h-full max-w-xl pt-16 md:pt-0">
+          <h2 className="text-xs font-sans font-bold text-[#84C225] uppercase tracking-widest mb-4">
+            Fearless Finance Mastery
+          </h2>
+          
+          <h3 className="text-4xl md:text-6xl lg:text-7xl font-black text-[#33312E] tracking-tighter leading-[1.05] mb-6">
+            Sophisticated,<br/>
+            Yet Fearless.
+          </h3>
+
+          <p className="text-sm md:text-lg font-sans font-medium text-[#33312E]/70 leading-relaxed mb-8 max-w-md">
+            Conquer the markets without the usual stress. BlissQuants empowers you to replace financial anxiety with data-driven confidence — mastering both active trading strategies and your long-term wealth vision.
+          </p>
+
+          <button className="group inline-flex items-center gap-2 px-8 py-3.5 bg-[#84C225] text-[#33312E] font-sans font-bold text-sm md:text-base rounded-full transition-transform hover:scale-105 shadow-[0_4px_14px_rgba(132,194,37,0.3)] w-fit">
+            Experience BlissQuants <span className="group-hover:translate-x-1 transition-transform">→</span>
+          </button>
+        </div>
+
+        <div className="relative w-full md:w-[55%] h-[60vh] md:h-full flex items-center justify-center mt-8 md:mt-0 perspective-1000">
+          {features.map((feature, index) => (
+            <StackingCard 
+              key={feature.id} 
+              feature={feature} 
+              index={index} 
+              smoothProgress={smoothProgress} 
+            />
+          ))}
+        </div>
+
+      </motion.div>
     </section>
   );
 }
