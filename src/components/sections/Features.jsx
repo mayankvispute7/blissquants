@@ -1,12 +1,30 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { motion, useScroll, useMotionValueEvent } from 'framer-motion';
 
-// Background Sine Waves
+// Animated Background Sine Waves
 const BackgroundWaves = () => (
   <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
     <svg className="absolute w-full h-full opacity-60" viewBox="0 0 1440 800" preserveAspectRatio="none">
-      <path d="M -100 200 C 300 400, 600 -100, 1000 400 C 1300 700, 1500 300, 1600 200" fill="none" stroke="#84C225" strokeWidth="1.5" />
-      <path d="M -100 300 C 400 100, 700 600, 1100 200 C 1300 0, 1500 500, 1600 400" fill="none" stroke="#FF9F9F" strokeWidth="1" />
+      <motion.path 
+        d="M -100 200 C 300 400, 600 -100, 1000 400 C 1300 700, 1500 300, 1600 200" 
+        fill="none" 
+        stroke="#84C225" 
+        strokeWidth="1.5" 
+        initial={{ pathLength: 0, opacity: 0 }}
+        whileInView={{ pathLength: 1, opacity: 1 }}
+        transition={{ duration: 2, ease: "easeInOut" }}
+        viewport={{ once: false, amount: 0.1 }}
+      />
+      <motion.path 
+        d="M -100 300 C 400 100, 700 600, 1100 200 C 1300 0, 1500 500, 1600 400" 
+        fill="none" 
+        stroke="#FF9F9F" 
+        strokeWidth="1" 
+        initial={{ pathLength: 0, opacity: 0 }}
+        whileInView={{ pathLength: 1, opacity: 1 }}
+        transition={{ duration: 2.5, ease: "easeInOut", delay: 0.2 }}
+        viewport={{ once: false, amount: 0.1 }}
+      />
     </svg>
   </div>
 );
@@ -41,14 +59,12 @@ const featureCards = [
     id: 4,
     title: "Master the Science of Trading",
     desc: "Unlock continuous learning with in-depth tutorials and authoritative publications. Dive into the mechanics of data-driven market mastery and never let fear dictate your financial decisions again.",
-    image: "https://images.unsplash.com/photo-1589829085413-56de8ae18c73?q=80&w=800&auto=format&fit=crop" // Book Image
+    image: "https://images.unsplash.com/photo-1589829085413-56de8ae18c73?q=80&w=800&auto=format&fit=crop"
   }
 ];
 
 export default function Feature() {
   const containerRef = useRef(null);
-  
-  // This state is the secret to the "snap and lock" feel.
   const [activeIndex, setActiveIndex] = useState(0);
   const [isMobile, setIsMobile] = useState(false);
 
@@ -59,35 +75,30 @@ export default function Feature() {
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
-  // Massive 600vh scroll container
   const { scrollYProgress } = useScroll({
     target: containerRef,
     offset: ["start start", "end end"]
   });
 
-  // 1. THE TRIGGER SYSTEM: 
-  // Instead of moving the cards 1 pixel at a time, we wait for you to cross a "threshold".
-  // Once crossed, it triggers the animation to glide the next card perfectly into the center.
+  // Trigger system for the buttery smooth snap effect
   useMotionValueEvent(scrollYProgress, "change", (latest) => {
     let index = 0;
     if (latest >= 0.12) index = 1;
     if (latest >= 0.32) index = 2;
     if (latest >= 0.52) index = 3;
-    if (latest >= 0.72) index = 4; // After 72%, the 5th card stays locked until the section ends!
+    if (latest >= 0.72) index = 4;
 
     if (index !== activeIndex) {
       setActiveIndex(index);
     }
   });
 
-  // 2. Click to jump to a specific threshold
   const handleCardClick = (index) => {
     if (!containerRef.current) return;
     const { top, height } = containerRef.current.getBoundingClientRect();
     const scrollY = window.scrollY;
     const scrollableDistance = height - window.innerHeight;
     
-    // Safely land in the middle of the trigger zones
     const targetProgress = (index * 0.20) + 0.05; 
     const targetY = scrollY + top + (scrollableDistance * targetProgress);
     
@@ -97,7 +108,7 @@ export default function Feature() {
   return (
     <section ref={containerRef} className="bg-[#F5F5F0] relative z-20 h-[600vh]">
       
-      {/* STICKY CONTAINER: Locks to the screen exactly 100vh tall */}
+      {/* STICKY CONTAINER */}
       <div className="sticky top-0 h-[100dvh] w-full overflow-hidden flex flex-col lg:flex-row items-center">
         
         <BackgroundWaves />
@@ -127,20 +138,16 @@ export default function Feature() {
           {/* RIGHT SIDE: The Perfect `)` Semi-Circle Carousel */}
           <div className="w-full lg:w-[55%] h-[70%] lg:h-full relative flex items-center justify-center lg:justify-end pr-0 lg:pr-12">
             
-            {/* WIDENED WRAPPER */}
             <div className="relative w-full max-w-[650px] h-full flex items-center justify-center">
               
               {featureCards.map((card, i) => {
-                // The difference between this card and the currently active center card
                 let diff = i - activeIndex;
 
-                // Curve Math: Matches your red drawing perfectly
                 const yOffset = isMobile ? 180 : 220; 
-                const xPush = isMobile ? 40 : 120; // Pushes inactive cards out to the right
+                const xPush = isMobile ? 40 : 120; 
 
                 let x = 0, y = 0, scale = 1, opacity = 1, zIndex = 10;
                 
-                // ACTIVE CENTER BOX (Largest, pulled left)
                 if (diff === 0) { 
                   x = isMobile ? 0 : -80; 
                   y = 0; 
@@ -148,7 +155,6 @@ export default function Feature() {
                   opacity = 1; 
                   zIndex = 30; 
                 } 
-                // NEXT BOX BELOW (Smaller, pushed right)
                 else if (diff === 1) { 
                   x = xPush; 
                   y = yOffset; 
@@ -156,7 +162,6 @@ export default function Feature() {
                   opacity = 0.6; 
                   zIndex = 20; 
                 } 
-                // PREVIOUS BOX ABOVE (Smaller, pushed right)
                 else if (diff === -1) { 
                   x = xPush; 
                   y = -yOffset; 
@@ -164,7 +169,6 @@ export default function Feature() {
                   opacity = 0.6; 
                   zIndex = 20; 
                 } 
-                // OUTERMOST BOTTOM (Smallest, pushed furthest right)
                 else if (diff === 2) { 
                   x = xPush * 1.8; 
                   y = yOffset * 1.8; 
@@ -172,7 +176,6 @@ export default function Feature() {
                   opacity = 0.15; 
                   zIndex = 10; 
                 } 
-                // OUTERMOST TOP (Smallest, pushed furthest right)
                 else if (diff === -2) { 
                   x = xPush * 1.8; 
                   y = -yOffset * 1.8; 
@@ -180,7 +183,6 @@ export default function Feature() {
                   opacity = 0.15; 
                   zIndex = 10; 
                 }
-                // OUT OF BOUNDS (Hidden completely)
                 else {
                   x = xPush * 2;
                   y = diff > 0 ? yOffset * 2.5 : -yOffset * 2.5;
@@ -196,15 +198,13 @@ export default function Feature() {
                     key={card.id}
                     onClick={() => handleCardClick(i)}
                     initial={false}
-                    // This creates the buttery smooth "glide and lock" animation
                     animate={{ y, x, scale, opacity, zIndex }}
                     transition={{ type: "spring", stiffness: 80, damping: 18 }}
-                    // 3. WIDER DIMENSIONS: w-[320px] on mobile, w-[580px] on desktop. 
                     className={`absolute cursor-pointer rounded-2xl bg-white overflow-hidden flex flex-col w-[320px] md:w-[580px] transition-colors duration-300
                       ${isActive ? 'border-[3px] border-[#84C225] shadow-[0_30px_60px_rgba(132,194,37,0.25)]' : 'border border-gray-200 shadow-xl hover:border-gray-300'}`}
                   >
                     
-                    {/* TOP: Image Block (Constrained height so the card remains a wide rectangle) */}
+                    {/* TOP: Image Block */}
                     <div className="w-full h-36 md:h-52 relative bg-gray-100">
                       <div className={`absolute inset-0 bg-black/10 mix-blend-overlay z-10 transition-opacity duration-300 ${isActive ? 'opacity-0' : 'opacity-100'}`}></div>
                       <img 

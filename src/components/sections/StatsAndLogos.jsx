@@ -1,22 +1,34 @@
-import React, { useRef, useEffect, useState } from 'react';
+import React, { useRef, useEffect } from 'react';
 import { motion, useInView, animate } from 'framer-motion';
-import { TrendingUp, MonitorSmartphone, BadgeDollarSign } from 'lucide-react';
+import { Shield, TrendingUp, Zap } from 'lucide-react';
 
-const AmbientBackground = () => (
-  <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden rounded-t-[3rem] md:rounded-t-[4rem]">
-    <motion.div 
-      animate={{ scale: [1, 1.2, 1], x: [0, 50, 0], y: [0, 30, 0] }}
-      transition={{ duration: 15, ease: "easeInOut", repeat: Infinity }}
-      className="absolute top-[10%] left-[5%] w-[40vw] h-[40vw] rounded-full bg-[#84C225] filter blur-[150px] opacity-[0.12]"
-    />
-    <motion.div 
-      animate={{ scale: [1, 1.3, 1], x: [0, -60, 0], y: [0, -40, 0] }}
-      transition={{ duration: 20, ease: "easeInOut", repeat: Infinity, delay: 2 }}
-      className="absolute bottom-[10%] right-[5%] w-[50vw] h-[50vw] rounded-full bg-[#84C225] filter blur-[180px] opacity-[0.1]"
-    />
-  </div>
-);
+// Smooth, Clean Line Chart (Reversed, NO Grid)
+const InfiniteReversedChart = () => {
+  const primaryPath = "M 0 1000 L 150 880 L 250 920 L 450 600 L 550 680 L 750 250 L 850 350 L 1000 0";
+  const secondaryPath = "M 0 1000 L 200 950 L 400 750 L 600 800 L 800 400 L 1000 0";
 
+  return (
+    <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none bg-[#3B3531]">
+      <svg className="absolute inset-0 w-full h-full z-10 scale-x-[-1]" viewBox="0 0 1000 1000" preserveAspectRatio="none">
+        <motion.g
+          animate={{ x: [0, 1000], y: [0, -1000] }}
+          transition={{ ease: "linear", duration: 35, repeat: Infinity }}
+        >
+          <g>
+            <path d={secondaryPath} fill="none" stroke="#FFFFFF" strokeWidth="1" opacity="0.05" />
+            <path d={primaryPath} fill="none" stroke="#84C225" strokeWidth="1.5" opacity="0.25" style={{ filter: 'drop-shadow(0px 0px 4px rgba(132,194,37,0.2))' }} />
+          </g>
+          <g transform="translate(-1000, 1000)">
+            <path d={secondaryPath} fill="none" stroke="#FFFFFF" strokeWidth="1" opacity="0.05" />
+            <path d={primaryPath} fill="none" stroke="#84C225" strokeWidth="1.5" opacity="0.25" style={{ filter: 'drop-shadow(0px 0px 4px rgba(132,194,37,0.2))' }} />
+          </g>
+        </motion.g>
+      </svg>
+    </div>
+  );
+};
+
+// Counter Logic for the smooth number climb
 const Counter = ({ from, to, duration = 2.5 }) => {
   const nodeRef = useRef();
   const inView = useInView(nodeRef, { once: true, margin: "0px" });
@@ -39,28 +51,28 @@ const Counter = ({ from, to, duration = 2.5 }) => {
   return <span ref={nodeRef}>{from}</span>;
 };
 
+// The Hover Effect Component for Stats
 const HoverInfoStat = ({ countTo, suffix, title, desc, direction = "left", delay = 0 }) => {
   const isLeft = direction === "left";
-
   return (
     <motion.div 
       initial={{ opacity: 0, y: 30 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-50px" }}
       transition={{ duration: 0.6, delay }}
-      className="relative group w-full h-[120px] md:h-[160px] flex items-center justify-center cursor-default"
+      className="relative group w-full h-[120px] flex items-center justify-center cursor-default"
     >
-      <div className={`absolute top-1/2 -translate-y-1/2 w-[200px] md:w-[280px] opacity-0 transition-all duration-700 ease-[0.22,1,0.36,1] pointer-events-none flex ${isLeft ? 'left-0 md:left-4 justify-end -translate-x-8 group-hover:translate-x-0' : 'right-0 md:right-4 justify-start translate-x-8 group-hover:translate-x-0'} group-hover:opacity-100 z-20`}>
-        <p className={`text-[12px] md:text-[13px] font-sans text-white/80 leading-[1.6] font-medium drop-shadow-md hidden md:block ${isLeft ? 'text-right' : 'text-left'}`}>
+      <div className={`absolute top-1/2 -translate-y-1/2 w-[220px] opacity-0 transition-all duration-700 ease-[0.22,1,0.36,1] pointer-events-none flex ${isLeft ? 'left-0 justify-end -translate-x-8 group-hover:translate-x-0' : 'right-0 justify-start translate-x-8 group-hover:translate-x-0'} group-hover:opacity-100 z-20`}>
+        <p className={`text-sm font-sans text-white/80 leading-relaxed font-medium hidden md:block ${isLeft ? 'text-right' : 'text-left'}`}>
           {desc}
         </p>
       </div>
 
       <div className={`relative z-10 flex flex-col items-center justify-center w-full transition-transform duration-700 ease-[0.22,1,0.36,1] ${isLeft ? 'md:group-hover:translate-x-32' : 'md:group-hover:-translate-x-32'}`}>
-        <h3 className="text-5xl md:text-7xl lg:text-[6.5rem] font-heading text-white tracking-tighter mb-1 md:mb-2 group-hover:text-[#84C225] transition-colors duration-500 drop-shadow-xl flex items-center">
+        <h3 className="text-5xl md:text-6xl font-sans font-black text-white mb-2 tracking-tighter group-hover:text-[#84C225] transition-colors duration-500">
           <Counter from={0} to={countTo} duration={2} />{suffix}
         </h3>
-        <span className="text-[10px] md:text-xs uppercase tracking-[0.2em] md:tracking-[0.3em] font-bold text-white/50 group-hover:text-white/90 transition-colors duration-300">
+        <span className="text-white/60 font-sans text-sm font-medium group-hover:text-white/90 transition-colors duration-300">
           {title}
         </span>
       </div>
@@ -68,135 +80,123 @@ const HoverInfoStat = ({ countTo, suffix, title, desc, direction = "left", delay
   );
 };
 
-const FeatureCard = ({ title, desc, icon: Icon, iconAnimation, index }) => {
-  return (
-    <motion.div 
-      initial={{ opacity: 0, y: 50 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-50px" }}
-      transition={{ duration: 0.6, delay: index * 0.15 }}
-      whileHover={{ y: -10, scale: 1.02 }}
-      className="relative group mt-6 md:mt-10 rounded-[1.5rem] md:rounded-3xl bg-[#2A2522] border border-white/5 p-6 md:p-8 pt-10 md:pt-12 text-left flex flex-col items-start justify-start h-full hover:border-[#84C225]/40 hover:bg-[#2A2522]/90 hover:shadow-[0_20px_40px_rgba(132,194,37,0.2)] transition-all duration-300"
-    >
-      <div className="absolute -top-6 md:-top-8 left-6 md:left-8 w-12 h-12 md:w-16 md:h-16 bg-[#84C225] rounded-full flex items-center justify-center shadow-[0_10px_20px_rgba(132,194,37,0.3)] border-[4px] border-[#3B3531] transition-transform duration-500 group-hover:scale-110">
-        <motion.div animate={iconAnimation.animate} transition={{ repeat: Infinity, duration: iconAnimation.duration, ease: "easeInOut" }}>
-          <Icon className="text-[#3B3531] w-5 h-5 md:w-7 md:h-7" strokeWidth={2.5} />
-        </motion.div>
-      </div>
-
-      <div className="relative z-10 w-full mt-2">
-        <h3 className="text-lg md:text-2xl font-heading font-black text-white mb-3 tracking-tight transition-colors duration-300 group-hover:text-[#84C225]">
-          {title}
-        </h3>
-        <p className="text-[12px] md:text-sm font-sans text-white/70 leading-[1.7] font-medium">
-          {desc}
-        </p>
-      </div>
-    </motion.div>
-  );
-};
+// All 16 Logos mapped from your folder
+const clientLogos = [
+  { name: "Adroit", src: "/logos/adroit.png" },
+  { name: "Agarwal", src: "/logos/agarwal.png" },
+  { name: "Alard", src: "/logos/alard.png" },
+  { name: "Bhagavan Mahavir", src: "/logos/bhagavan_mahavir.png" },
+  { name: "BV Patel", src: "/logos/bvpatel.png" },
+  { name: "CKP", src: "/logos/ckp.png" },
+  { name: "DIMR", src: "/logos/dimr.png" },
+  { name: "DPU", src: "/logos/dpu.png" },
+  { name: "Jainum", src: "/logos/jainum.png" },
+  { name: "MarketHub", src: "/logos/markethub.png" },
+  { name: "Marwadi", src: "/logos/marwadi.png" },
+  { name: "SCET", src: "/logos/scet_1.png" },
+  { name: "SR Luthara", src: "/logos/srluthara.png" },
+  { name: "UKA", src: "/logos/uka.png" },
+  { name: "Vaghani Shares", src: "/logos/vaghani_shares.png" },
+  { name: "Vedika", src: "/logos/vedika.png" },
+];
 
 export default function StatsAndLogos() {
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  const duplicatedLogos = [...clientLogos, ...clientLogos, ...clientLogos];
 
-  const handleMouseMove = (e) => {
-    const rect = e.currentTarget.getBoundingClientRect();
-    setMousePosition({
-      x: e.clientX - rect.left,
-      y: e.clientY - rect.top,
-    });
+  // 3D "Thrown Card" Animation Variants
+  const cardVariants = {
+    hidden: { opacity: 0, y: 150, rotateX: 45, scale: 0.8 },
+    visible: (i) => ({
+      opacity: 1, 
+      y: 0, 
+      rotateX: 0, 
+      scale: 1,
+      transition: { type: "spring", stiffness: 100, damping: 15, delay: i * 0.15 }
+    })
   };
 
-  const brands = ["KRAKEN", "FTX", "GEMINI", "BITFINEX", "KUCOIN", "HUOBI", "BINANCE", "COINBASE"];
-  const bottomBrands = ["REUTERS", "FORBES", "CNBC", "ECONOMIC TIMES", "SEBI REGISTERED", "BSE", "NSE"];
-  const duplicatedTop = [...brands, ...brands, ...brands, ...brands, ...brands];
-  const duplicatedBottom = [...bottomBrands, ...bottomBrands, ...bottomBrands, ...bottomBrands, ...bottomBrands];
+  const featureBoxes = [
+    { icon: TrendingUp, title: "Algorithmic Precision", desc: "Execute trades with zero hesitation using mathematically verified quantitative strategies." },
+    { icon: Shield, title: "Risk Mitigation", desc: "Advanced delta hedging automatically protects your capital against sudden market downturns." },
+    { icon: Zap, title: "Real-Time Execution", desc: "Instantaneous data processing ensures you never miss a critical market opportunity." }
+  ];
 
   return (
-    <section 
-      onMouseMove={handleMouseMove}
-      // Natural scrolling layout. pb-40 md:pb-64 ensures massive space at the bottom so the next section NEVER overlaps the logos.
-      className="bg-[#3B3531] relative z-30 -mt-20 rounded-t-[3rem] md:rounded-t-[4rem] shadow-[0_-40px_80px_rgba(0,0,0,0.5)] overflow-hidden pt-24 md:pt-36 pb-40 md:pb-64"
-    >
-      <AmbientBackground />
-
-      <div 
-        className="pointer-events-none absolute inset-0 z-0 transition-opacity duration-300"
-        style={{ background: `radial-gradient(600px circle at ${mousePosition.x}px ${mousePosition.y}px, rgba(132, 194, 37, 0.15), transparent 80%)` }}
-      />
+    <section className="relative z-10 bg-[#3B3531] pt-24 md:pt-32 pb-20 overflow-hidden border-t border-white/5">
+      
+      <InfiniteReversedChart />
 
       <style>{`
         @keyframes scroll-left { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
-        @keyframes scroll-right { 0% { transform: translateX(-50%); } 100% { transform: translateX(0); } }
-        .animate-scroll-left { animation: scroll-left 40s linear infinite; }
-        .animate-scroll-right { animation: scroll-right 40s linear infinite; }
-        .mask-image-fade { mask-image: linear-gradient(to right, transparent, black 15%, black 85%, transparent); }
+        .animate-marquee { animation: scroll-left 45s linear infinite; }
+        .mask-edges { mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent); }
       `}</style>
 
-      <div className="max-w-7xl mx-auto px-6 md:px-8 relative z-10 flex flex-col h-full w-full">
+      <div className="relative z-20 max-w-7xl mx-auto px-6 md:px-12 flex flex-col items-center">
         
-        {/* HEADER */}
-        <motion.div 
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-50px" }}
-          transition={{ duration: 0.6 }}
-          className="w-full text-center mb-16 md:mb-24"
-        >
-          <h2 className="text-[#84C225] font-sans font-bold tracking-[0.2em] md:tracking-[0.3em] uppercase text-[10px] md:text-xs mb-3 md:mb-4">
-            Proven Track Record
-          </h2>
-          <h3 className="text-3xl md:text-5xl lg:text-6xl font-heading font-black text-white drop-shadow-xl tracking-tight">
-            Empowering Traders Worldwide
-          </h3>
-        </motion.div>
-
-        {/* STATS */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-4 max-w-6xl mx-auto w-full mb-20 md:mb-32">
-          <HoverInfoStat delay={0.1} countTo={300} suffix="+" title="Candidates" desc="Candidates preferred our Delta Hedging training for advanced market strategies." direction="left" />
-          <HoverInfoStat delay={0.2} countTo={8} suffix="+" title="Years Experience" desc="We have been working with candidates for 8+ years solving nearly all possible risk issues." direction="right" />
-        </div>
-
-        {/* FEATURE CARDS */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 w-full relative mb-24 md:mb-36">
-          <FeatureCard index={0} iconAnimation={{ animate: { x: [0, 3, 0], y: [0, -3, 0] }, duration: 2 }} icon={TrendingUp} title="40% Growth in Income" desc="BlissQuant's working strategies helps you in earning 40% more on your investment every month. BlissQuants makes you earn independently." />
-          <FeatureCard index={1} iconAnimation={{ animate: { scale: [1, 1.1, 1] }, duration: 2 }} icon={MonitorSmartphone} title="Flexible solutions for Risk profile" desc="Blissquants IV Analytics software helps you in prevention of loss. This software tells you live condition of the market." />
-          <FeatureCard index={2} iconAnimation={{ animate: { rotate: [0, -10, 10, -10, 0] }, duration: 2.5 }} icon={BadgeDollarSign} title="Attractive Partnership offer" desc="You will become an official partner of BlissQuants with attractive ratio in just 3rd month of your training." />
-        </div>
-
-        {/* LOGO SLIDER */}
-        <motion.div 
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-50px" }}
-          transition={{ duration: 0.8 }}
-          className="w-full flex flex-col items-center justify-end z-30"
-        >
-          <div className="flex items-center gap-4 mb-6 md:mb-8">
-            <div className="h-[1px] w-12 md:w-24 bg-white/10"></div>
-            <p className="text-[9px] md:text-xs font-sans font-bold uppercase text-white/50 tracking-[0.3em]">
-              Trusted by Industry Leaders
-            </p>
-            <div className="h-[1px] w-12 md:w-24 bg-white/10"></div>
+        {/* TOP: STATS SECTION */}
+        <div className="w-full mb-24 flex flex-col md:flex-row items-center justify-between gap-12">
+          <div className="w-full md:w-[40%] text-center md:text-left">
+            <h4 className="text-[#84C225] font-sans font-bold text-xs tracking-[0.2em] uppercase mb-4">
+              Proven Track Record
+            </h4>
+            <h2 className="text-4xl md:text-5xl lg:text-6xl font-sans font-black text-white tracking-tighter leading-[1.05]">
+              Empowering Traders Worldwide.
+            </h2>
           </div>
+
+          <div className="w-full md:w-[60%] flex flex-col md:flex-row gap-8 md:gap-0">
+            <HoverInfoStat countTo={300} suffix="+" title="Active Candidates" desc="Candidates preferred our training for advanced active trading strategies." direction="left" />
+            <HoverInfoStat countTo={8} suffix="+" title="Years Experience" desc="We have been dominating the quantitative markets for over 8 years." direction="right" delay={0.2} />
+          </div>
+        </div>
+
+        {/* MIDDLE: THE 3 "THROWN" ANIMATED BOXES */}
+        <div className="w-full grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 perspective-1000 mb-24">
+          {featureBoxes.map((box, i) => (
+            <motion.div
+              custom={i}
+              variants={cardVariants}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, margin: "-50px" }}
+              key={i}
+              className="bg-[#2A2522] border border-white/5 rounded-3xl p-8 hover:border-[#84C225]/40 transition-colors duration-300 shadow-2xl flex flex-col"
+            >
+              <div className="w-14 h-14 rounded-full bg-[#3B3531] border border-white/10 flex items-center justify-center mb-6">
+                <box.icon className="text-[#84C225] w-6 h-6" />
+              </div>
+              <h4 className="text-white font-sans font-bold text-xl md:text-2xl mb-3 tracking-tight">
+                {box.title}
+              </h4>
+              <p className="text-white/60 font-sans text-sm md:text-base leading-relaxed">
+                {box.desc}
+              </p>
+            </motion.div>
+          ))}
+        </div>
+
+        {/* BOTTOM: LOGOS MARQUEE SECTION */}
+        <div className="w-full flex flex-col items-center justify-center pt-12 border-t border-white/5">
+          <p className="text-white/40 font-sans font-bold text-xs tracking-[0.3em] uppercase mb-10 text-center">
+            Trusted by Industry Leaders
+          </p>
           
-          <div className="w-full flex flex-col gap-6 md:gap-8 mask-image-fade">
-            <div className="relative flex overflow-x-hidden group/marquee w-full">
-              <div className="flex items-center min-w-max animate-scroll-right group-hover/marquee:[animation-play-state:paused]">
-                {duplicatedTop.map((brand, i) => (
-                  <div key={i} className="mx-6 md:mx-12 text-xl md:text-4xl font-heading font-black tracking-widest text-white/10 transition-all duration-300 cursor-crosshair group-hover/marquee:blur-[6px] group-hover/marquee:opacity-20 hover:!blur-none hover:!opacity-100 hover:!text-[#84C225] hover:scale-110">{brand}</div>
-                ))}
-              </div>
-            </div>
-            <div className="relative flex overflow-x-hidden group/marquee w-full hidden md:flex">
-              <div className="flex items-center min-w-max animate-scroll-left group-hover/marquee:[animation-play-state:paused]">
-                {duplicatedBottom.map((brand, i) => (
-                  <div key={i} className="mx-6 md:mx-12 text-xl md:text-4xl font-heading font-black tracking-widest text-white/10 transition-all duration-300 cursor-crosshair group-hover/marquee:blur-[6px] group-hover/marquee:opacity-20 hover:!blur-none hover:!opacity-100 hover:!text-[#84C225] hover:scale-110">{brand}</div>
-                ))}
-              </div>
+          <div className="w-full relative flex overflow-hidden mask-edges group">
+            <div className="flex items-center min-w-max animate-marquee group-hover:[animation-play-state:paused]">
+              {duplicatedLogos.map((logo, i) => (
+                <div key={i} className="mx-8 md:mx-12 flex items-center justify-center cursor-pointer group/logo">
+                  <img 
+                    src={logo.src} 
+                    alt={logo.name} 
+                    // UPDATED: Added scale-110 on hover and an opacity shift for a dynamic pop effect
+                    className="max-w-[160px] max-h-[60px] w-auto object-contain drop-shadow-md opacity-80 group-hover/logo:opacity-100 group-hover/logo:scale-110 transition-all duration-300 ease-in-out"
+                  />
+                </div>
+              ))}
             </div>
           </div>
-        </motion.div>
+        </div>
 
       </div>
     </section>

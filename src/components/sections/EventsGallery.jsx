@@ -17,12 +17,15 @@ const AmbientBackground = () => (
   </div>
 );
 
+// Updated with exact file names from your public/events folder
 const eventsData = [
-  { id: 1, image: "https://images.unsplash.com/photo-1540575467063-178a50c2df87?q=80&w=2070&auto=format&fit=crop", title: "National FinTech Summit", location: "Mumbai, India", date: "October 2025", sentences: ["Awarded 'Best Risk Tech' of the year.", "Over 500+ institutional traders attended.", "Keynote delivered by lead quant engineers."] },
-  { id: 2, image: "https://images.unsplash.com/photo-1556761175-5973dc0f32d7?q=80&w=1932&auto=format&fit=crop", title: "Delta Hedging Workshop", location: "Delhi, India", date: "August 2025", sentences: ["Intensive 3-day training bootcamp.", "Trained 100+ candidates in live scenarios.", "95% strategy success rate."] },
-  { id: 3, image: "https://images.unsplash.com/photo-1515187029135-18ee286d815b?q=80&w=2070&auto=format&fit=crop", title: "Global Wealth Conference", location: "Bangalore, India", date: "May 2025", sentences: ["Showcased automated rebalancing.", "Innovator in UI/UX recognition.", "Partnered with top tier institutions."] },
-  { id: 4, image: "https://images.unsplash.com/photo-1552664730-d307ca884978?q=80&w=2070&auto=format&fit=crop", title: "Institutional Mastery", location: "Pune, India", date: "March 2025", sentences: ["Exclusive partner event.", "Unveiled new high-freq engine.", "Honesty and hardwork prevail."] },
-  { id: 5, image: "https://images.unsplash.com/photo-1505373877841-8d25f7d46678?q=80&w=2012&auto=format&fit=crop", title: "Founders Tech Panel", location: "Hyderabad, India", date: "January 2025", sentences: ["Discussing algo-trading futures.", "BlissQuants voted most trusted.", "Eliminating financial anxiety."] }
+  { id: 1, image: "/events/indor_training_1.png", title: "Indore Training", location: "Indore, India", date: "October 2025", sentences: ["Intensive 3-day training bootcamp.", "Trained candidates in live scenarios.", "95% strategy success rate."] },
+  { id: 2, image: "/events/book_launch.jpeg", title: "Book Launch", location: "Mumbai, India", date: "August 2025", sentences: ["Awarded 'Best Risk Tech' of the year.", "Over 500+ institutional traders attended.", "Keynote delivered by lead quant engineers."] },
+  { id: 3, image: "/events/pune_training_1.jpeg", title: "Pune Training", location: "Pune, India", date: "May 2025", sentences: ["Showcased automated rebalancing.", "Innovator in UI/UX recognition.", "Partnered with top tier institutions."] },
+  { id: 4, image: "/events/ioc_1_1.jpg", title: "IOC Corporate Event", location: "Delhi, India", date: "March 2025", sentences: ["Exclusive partner event.", "Unveiled new high-freq engine.", "Honesty and hardwork prevail."] },
+  { id: 5, image: "/events/kolkata_training_1.jpeg", title: "Kolkata Training", location: "Kolkata, India", date: "January 2025", sentences: ["Discussing algo-trading futures.", "BlissQuants voted most trusted.", "Eliminating financial anxiety."] },
+  { id: 6, image: "/events/indor_training_2.png", title: "Indore Advanced", location: "Indore, India", date: "November 2024", sentences: ["Advanced quantitative models.", "Real-time market simulations.", "Award-winning curriculum."] },
+  { id: 7, image: "/events/ioc_3_1.jpeg", title: "IOC Summit", location: "Bangalore, India", date: "September 2024", sentences: ["Industry leader networking.", "Live delta hedging showcase.", "Record breaking attendance."] }
 ];
 
 const duplicatedEvents = [...eventsData, ...eventsData, ...eventsData];

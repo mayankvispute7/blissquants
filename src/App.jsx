@@ -6,7 +6,8 @@ import Hero from './components/sections/Hero';
 import Features from './components/sections/Features';
 import StatsAndLogos from './components/sections/StatsAndLogos';
 import CoreOfferings from './components/sections/CoreOfferings';
-import EventsGallery from './components/sections/EventsGallery'; // 🚀 Added Import
+import EventsGallery from './components/sections/EventsGallery';
+import Testimonials from './components/sections/Testimonials'; // 🚀 Added Import
 import Footer from './components/layout/Footer';
 
 function App() {
@@ -33,8 +34,8 @@ function App() {
               <Features />
               <StatsAndLogos />
               <CoreOfferings />
-              <EventsGallery /> {/* 🚀 Added directly after CoreOfferings */}
-              {/* TrustStrip has been removed from here */}
+              <EventsGallery />
+              <Testimonials /> {/* 🚀 Added directly after EventsGallery */}
               <Footer />
             </>
           )}
