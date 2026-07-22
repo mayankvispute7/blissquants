@@ -178,19 +178,20 @@ export default function StatsAndLogos() {
 
         {/* BOTTOM: LOGOS MARQUEE SECTION */}
         <div className="w-full flex flex-col items-center justify-center pt-12 border-t border-white/5">
-          <p className="text-white/40 font-sans font-bold text-xs tracking-[0.3em] uppercase mb-10 text-center">
+          <p className="text-white/40 font-sans font-bold text-xs tracking-[0.3em] uppercase mb-4 text-center">
             Trusted by Industry Leaders
           </p>
           
           <div className="w-full relative flex overflow-hidden mask-edges group">
-            <div className="flex items-center min-w-max animate-marquee group-hover:[animation-play-state:paused]">
+            {/* Added py-10 to prevent the large hover scale from getting clipped */}
+            <div className="flex items-center min-w-max animate-marquee group-hover:[animation-play-state:paused] py-10">
               {duplicatedLogos.map((logo, i) => (
-                <div key={i} className="mx-8 md:mx-12 flex items-center justify-center cursor-pointer group/logo">
+                <div key={i} className="mx-8 md:mx-12 flex items-center justify-center cursor-pointer group/logo relative z-0 hover:z-50">
                   <img 
                     src={logo.src} 
                     alt={logo.name} 
-                    // UPDATED: Added scale-110 on hover and an opacity shift for a dynamic pop effect
-                    className="max-w-[160px] max-h-[60px] w-auto object-contain drop-shadow-md opacity-80 group-hover/logo:opacity-100 group-hover/logo:scale-110 transition-all duration-300 ease-in-out"
+                    // UPDATED: brightness-140 by default, scale-130 and bright glow on hover
+                    className="max-w-[160px] max-h-[60px] w-auto object-contain transition-all duration-300 ease-out brightness-[1.4] contrast-[1.2] group-hover/logo:scale-[1.3] group-hover/logo:brightness-[1.8] group-hover/logo:drop-shadow-[0_0_25px_rgba(255,255,255,0.4)]"
                   />
                 </div>
               ))}

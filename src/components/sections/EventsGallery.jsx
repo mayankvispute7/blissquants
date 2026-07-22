@@ -2,22 +2,6 @@ import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Award, Calendar, MapPin, X } from 'lucide-react';
 
-const AmbientBackground = () => (
-  <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden rounded-t-[3rem] md:rounded-t-[4rem]">
-    <motion.div 
-      animate={{ scale: [1, 1.2, 1], x: [0, 50, 0], y: [0, 30, 0] }}
-      transition={{ duration: 15, ease: "easeInOut", repeat: Infinity }}
-      className="absolute top-[20%] left-[10%] w-[40vw] h-[40vw] rounded-full bg-[#84C225] filter blur-[150px] opacity-[0.08]"
-    />
-    <motion.div 
-      animate={{ scale: [1, 1.3, 1], x: [0, -60, 0], y: [0, -40, 0] }}
-      transition={{ duration: 20, ease: "easeInOut", repeat: Infinity, delay: 2 }}
-      className="absolute bottom-[20%] right-[10%] w-[45vw] h-[45vw] rounded-full bg-[#84C225] filter blur-[180px] opacity-[0.06]"
-    />
-  </div>
-);
-
-// Updated with exact file names from your public/events folder
 const eventsData = [
   { id: 1, image: "/events/indor_training_1.png", title: "Indore Training", location: "Indore, India", date: "October 2025", sentences: ["Intensive 3-day training bootcamp.", "Trained candidates in live scenarios.", "95% strategy success rate."] },
   { id: 2, image: "/events/book_launch.jpeg", title: "Book Launch", location: "Mumbai, India", date: "August 2025", sentences: ["Awarded 'Best Risk Tech' of the year.", "Over 500+ institutional traders attended.", "Keynote delivered by lead quant engineers."] },
@@ -35,11 +19,9 @@ const FilmFrame = ({ event }) => {
   const [isFlipped, setIsFlipped] = useState(false);
 
   return (
-    // The frame itself. Notice mx-2 to mimic tight spacing between frames on a tape roll
     <div className="relative w-[280px] h-[360px] md:w-[320px] md:h-[420px] shrink-0 mx-2 perspective-1000 z-10 group">
       <div className="w-full h-full relative cursor-pointer" onClick={() => setIsFlipped(!isFlipped)}>
         
-        {/* The 3D Flip Wrapper */}
         <motion.div 
           className="w-full h-full relative preserve-3d"
           animate={{ rotateY: isFlipped ? 180 : 0 }}
@@ -47,14 +29,12 @@ const FilmFrame = ({ event }) => {
         >
           
           {/* --- FRONT OF FILM FRAME (Image side) --- */}
-          {/* Using a tight dark border to match the film reel aesthetic */}
           <div className="absolute inset-0 backface-hidden overflow-hidden border-4 border-[#0a0a0a] bg-[#1A1A1A]">
             <img 
               src={event.image} 
               alt={event.title} 
               className="w-full h-full object-cover opacity-80"
             />
-            {/* Cinematic bottom shadow */}
             <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0a] via-transparent to-transparent opacity-90"></div>
             
             <div className="absolute bottom-6 left-6 right-6">
@@ -107,19 +87,11 @@ const FilmFrame = ({ event }) => {
 };
 
 export default function EventsGallery() {
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
-
-  const handleMouseMove = (e) => {
-    const rect = e.currentTarget.getBoundingClientRect();
-    setMousePosition({ x: e.clientX - rect.left, y: e.clientY - rect.top });
-  };
-
   return (
-    <section onMouseMove={handleMouseMove} className="bg-[#3B3531] relative z-20 py-24 md:py-36 overflow-hidden border-t border-white/5">
-      <AmbientBackground />
-
-      <div className="pointer-events-none absolute inset-0 z-0 transition-opacity duration-300" style={{ background: `radial-gradient(600px circle at ${mousePosition.x}px ${mousePosition.y}px, rgba(132, 194, 37, 0.12), transparent 80%)` }} />
-
+    <section className="bg-[#3B3531] relative z-20 py-24 md:py-36 overflow-hidden border-t border-white/5">
+      
+      {/* Removed the AmbientBackground and dynamic radial gradients entirely */}
+      
       <style>{`
         .perspective-1000 { perspective: 1000px; }
         .preserve-3d { transform-style: preserve-3d; }
@@ -139,15 +111,13 @@ export default function EventsGallery() {
           animation-play-state: paused; 
         }
 
-        /* 🎞️ THE MAGIC CSS: Building the realistic film strip tape background */
         .film-strip-track {
-          background-color: #0a0a0a; /* Dark tape color */
+          background-color: #0a0a0a;
           position: relative;
-          padding: 32px 0; /* Space for the top/bottom holes */
+          padding: 32px 0; 
           box-shadow: 0 30px 60px rgba(0,0,0,0.6);
         }
 
-        /* Top and Bottom Sprocket Holes */
         .film-strip-track::before,
         .film-strip-track::after {
           content: "";
@@ -155,12 +125,10 @@ export default function EventsGallery() {
           left: 0;
           right: 0;
           height: 16px;
-          /* The repeating gradient creates transparent squares that let the #3B3531 background show through! */
           background-image: repeating-linear-gradient(90deg, transparent 0px, transparent 16px, #3B3531 16px, #3B3531 24px);
           z-index: 5;
         }
 
-        /* Position the holes perfectly on the top and bottom edge */
         .film-strip-track::before { top: 6px; }
         .film-strip-track::after { bottom: 6px; }
       `}</style>
@@ -175,10 +143,7 @@ export default function EventsGallery() {
           </h2>
         </motion.div>
 
-        {/* 🎞️ Film Strip / Rolling Tape Track */}
         <div className="w-full group-hover-pause relative my-8">
-          
-          {/* This container carries the special film-strip-track CSS classes to render the tape and holes */}
           <div className="film-strip-track relative flex overflow-x-hidden w-full z-10">
             <div className="flex items-center animate-scroll-gallery">
               {duplicatedEvents.map((event, i) => (
@@ -186,7 +151,6 @@ export default function EventsGallery() {
               ))}
             </div>
           </div>
-
         </div>
 
       </div>
