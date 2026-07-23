@@ -25,14 +25,12 @@ const FooterBackground = () => {
   );
 };
 
+// Kept only the 4 core tabs you requested
 const footerLinks = {
-  COMPANY: ['About', 'Team', 'Careers', 'Press'],
   TRADE: ['Options IV', 'Strategy', 'Intraday', 'Positional'],
   INVEST: ['BlissFund 3.0', 'Latest letter', 'Methodology', 'Pricing'],
+  RESEARCH: ['Market Analysis', 'Quant Models', 'Delta Reports', 'Insights'],
   LEARN: ['Enrich Your FQ', 'Investment', 'Trading', 'Blog'],
-  SUPPORT: ['Help Center', 'FAQ', 'Contact', 'Docs'],
-  LEGAL: ['Terms', 'Privacy', 'Disclaimer', 'Refund'],
-  CONNECT: ['LinkedIn', 'Twitter', 'YouTube', 'Instagram'],
 };
 
 export default function Footer() {
@@ -40,10 +38,10 @@ export default function Footer() {
     <footer className="bg-[#3B3531] relative z-20 pt-20 pb-8 overflow-hidden border-t border-white/10">
       <FooterBackground />
       
-      <div className="max-w-7xl mx-auto px-6 md:px-12 relative z-10">
+      <div className="max-w-5xl mx-auto px-6 md:px-12 relative z-10">
         
-        {/* Top Links Grid */}
-        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-8 mb-20">
+        {/* Top Links Grid - Now a clean 4-column layout */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-16">
           {Object.entries(footerLinks).map(([category, links]) => (
             <div key={category} className="flex flex-col">
               <h4 className="text-[#84C225] font-sans font-bold text-xs tracking-[0.15em] uppercase mb-6">
@@ -62,7 +60,7 @@ export default function Footer() {
           ))}
         </div>
 
-        {/* Middle Section: Logo & Contact */}
+        {/* Middle Section: Logo & Company Info */}
         <div className="flex flex-col items-center justify-center border-t border-white/10 pt-12 mb-12">
           <div className="flex items-center gap-3 mb-6">
             <div className="w-10 h-10 bg-[#84C225] text-black font-serif font-bold text-2xl flex items-center justify-center rounded-sm">
@@ -87,7 +85,7 @@ export default function Footer() {
               +91 92096 32020
             </a>
             <span className="flex items-center gap-2">
-              <MapPin size={16} className="text-pink-500" />
+              <MapPin size={16} className="text-[#84C225]" />
               Pune, Maharashtra, India
             </span>
           </div>

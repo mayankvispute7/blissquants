@@ -1,106 +1,121 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { ArrowRight } from 'lucide-react';
+import { LineChart, ShieldCheck, Briefcase, GraduationCap, BookOpen } from 'lucide-react';
 
-const servicesData = [
+const offerings = [
   {
     id: 1,
-    num: "01",
     title: "Algorithmic Trading",
-    subtitle: "Automate your edge in the markets.",
-    desc: "Deploy highly optimized, latency-sensitive trading algorithms. We provide the infrastructure to backtest and execute complex quantitative strategies with absolute precision.",
-    bgColor: "bg-primary",
-    textColor: "text-dark",
-    btnBg: "bg-dark",
-    btnText: "text-light",
-    img: "https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?q=80&w=800&auto=format&fit=crop"
+    desc: "Automate your trades with mathematically verified quantitative strategies.",
+    icon: LineChart,
+    colSpan: "col-span-1"
   },
   {
     id: 2,
-    num: "02",
-    title: "AI-Powered Analytics",
-    subtitle: "Decode the noise with artificial intelligence.",
-    desc: "Utilize advanced Large Language Models (LLMs) to process real-time market sentiment, news feeds, and global economic data, turning unstructured information into actionable alpha.",
-    bgColor: "bg-light",
-    textColor: "text-dark",
-    btnBg: "bg-primary",
-    btnText: "text-dark",
-    img: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=800&auto=format&fit=crop"
+    title: "Delta Hedging",
+    desc: "Advanced risk mitigation to protect your capital against market downturns.",
+    icon: ShieldCheck,
+    colSpan: "col-span-1"
   },
   {
     id: 3,
-    num: "03",
-    title: "Risk Management",
-    subtitle: "Protect capital. Maximize returns.",
-    desc: "Dynamic, real-time risk auditing tools that autonomously monitor your portfolio exposure. Set strict draw-down limits and let our platform ensure your wealth is protected.",
-    bgColor: "bg-[#1A1A1A]", 
-    textColor: "text-light",
-    btnBg: "bg-primary",
-    btnText: "text-dark",
-    img: "https://images.unsplash.com/photo-1600880292203-757bb62b4baf?q=80&w=800&auto=format&fit=crop"
+    title: "Wealth Management",
+    desc: "Comprehensive portfolio structuring for long-term financial growth.",
+    icon: Briefcase,
+    colSpan: "col-span-1"
+  },
+  {
+    id: 4,
+    title: "Elite Education",
+    desc: "Master the markets with our hands-on, expert-led training programs.",
+    icon: GraduationCap,
+    colSpan: "md:col-span-2 lg:col-span-1 lg:col-start-2" // Centers it nicely on bottom row
+  },
+  {
+    id: 5,
+    title: "The BlissQuants Book",
+    desc: "Discover our award-winning methodologies in our newly launched book.",
+    icon: BookOpen,
+    image: "/events/book_launch.jpeg", // Placeholder for your book image
+    colSpan: "md:col-span-2 lg:col-span-1" // Pairs with card 4 on the bottom row
   }
 ];
 
 export default function Services() {
   return (
-    <section className="bg-dark pt-12 pb-32 relative z-20">
-      <div className="max-w-6xl mx-auto px-6">
+    <section className="bg-[#F5F5F0] py-24 md:py-32 relative z-20">
+      <div className="max-w-7xl mx-auto px-6 md:px-12">
         
-        {/* Sticky Stacking Cards Container */}
-        <div className="relative w-full pb-[10vh]"> 
-          {servicesData.map((service, index) => (
+        {/* THEMED HEADER (Matches your exact request) */}
+        <div className="text-center max-w-3xl mx-auto mb-16 md:mb-20">
+          <motion.h4 
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-[#84C225] font-sans font-bold text-xs tracking-[0.2em] uppercase mb-4"
+          >
+            Platform Capabilities
+          </motion.h4>
+          <motion.h2 
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.1 }}
+            className="text-4xl md:text-5xl lg:text-7xl font-sans font-black text-[#1A1A1A] tracking-tighter mb-6"
+          >
+            Our Core Offerings
+          </motion.h2>
+          <motion.p 
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.2 }}
+            className="text-gray-500 font-sans text-base md:text-lg leading-relaxed max-w-2xl mx-auto"
+          >
+            Empower your financial journey with our specialized tools, wealth solutions, and elite educational resources.
+          </motion.p>
+        </div>
+
+        {/* 5-BOX FINITE LAYOUT */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+          {offerings.map((item, index) => (
             <motion.div
-              key={service.id}
-              initial={{ opacity: 0, y: 50 }}
+              key={item.id}
+              initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-100px" }}
-              transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-              className={`sticky w-full min-h-[500px] md:h-[600px] rounded-[2rem] shadow-[0_-20px_40px_rgba(0,0,0,0.4)] flex flex-col md:flex-row overflow-hidden ${service.bgColor} ${service.textColor}`}
-              style={{ 
-                top: `calc(120px + ${index * 40}px)`, 
-                marginBottom: '5vh' 
-              }}
+              viewport={{ once: true, margin: "-50px" }}
+              transition={{ delay: index * 0.1, duration: 0.5 }}
+              className={`relative overflow-hidden bg-white rounded-3xl p-8 border border-gray-100 shadow-[0_15px_40px_rgba(0,0,0,0.04)] hover:shadow-[0_20px_50px_rgba(0,0,0,0.08)] transition-all duration-300 group ${item.colSpan}`}
             >
-              
-              <div className="flex flex-col justify-between p-10 md:p-16 w-full md:w-7/12">
-                <div>
-                  <h3 className="text-4xl md:text-6xl font-heading tracking-tight mb-2">
-                    {service.title}
-                  </h3>
-                  <p className="text-lg md:text-xl font-sans font-medium opacity-80">
-                    {service.subtitle}
-                  </p>
-                </div>
-                
-                <div className="mt-12 md:mt-0">
-                  <p className="text-sm md:text-base font-sans max-w-sm mb-8 leading-relaxed opacity-90">
-                    {service.desc}
-                  </p>
-                  <button className={`group flex items-center gap-3 px-6 py-3 rounded-full font-sans font-bold text-sm uppercase tracking-wide transition-transform hover:scale-105 ${service.btnBg} ${service.btnText}`}>
-                    Discover our approach
-                    <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
-                  </button>
-                </div>
-              </div>
-
-              <div className="hidden md:flex flex-col justify-between items-end p-10 md:p-16 w-5/12 border-l border-black/5 dark:border-white/5">
-                <span className="text-5xl lg:text-7xl font-heading tracking-tighter opacity-30">
-                  {service.num}
-                </span>
-                
-                <div className="w-[240px] h-[320px] rounded-2xl overflow-hidden shadow-2xl rotate-2 hover:rotate-0 transition-transform duration-500">
+              {/* If it's the 5th card (Book), show the edge-to-edge image */}
+              {item.image && (
+                <div className="absolute inset-0 z-0">
                   <img 
-                    src={service.img} 
-                    alt={service.title}
-                    className="w-full h-full object-cover hover:scale-110 transition-transform duration-700" 
+                    src={item.image} 
+                    alt={item.title} 
+                    className="w-full h-full object-cover opacity-20 group-hover:opacity-30 transition-opacity duration-500" 
                   />
+                  <div className="absolute inset-0 bg-gradient-to-t from-white via-white/80 to-transparent" />
+                </div>
+              )}
+
+              <div className="relative z-10 flex flex-col h-full justify-between">
+                <div>
+                  <div className="w-14 h-14 rounded-2xl bg-[#F5F5F0] flex items-center justify-center mb-6 group-hover:scale-110 group-hover:bg-[#84C225] transition-all duration-300">
+                    <item.icon className="text-[#1A1A1A] w-6 h-6" />
+                  </div>
+                  <h3 className="text-2xl font-sans font-black text-[#1A1A1A] tracking-tight mb-3">
+                    {item.title}
+                  </h3>
+                  <p className="text-gray-500 font-sans text-sm leading-relaxed">
+                    {item.desc}
+                  </p>
                 </div>
               </div>
-
             </motion.div>
           ))}
         </div>
-        
+
       </div>
     </section>
   );

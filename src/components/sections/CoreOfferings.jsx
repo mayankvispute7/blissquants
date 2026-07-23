@@ -78,17 +78,18 @@ export default function CoreOfferings() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, amount: 0.2 }}
             transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-            className="text-xs font-sans font-bold text-primary uppercase tracking-widest mb-4"
+            className="text-xs font-sans font-bold text-[#84C225] uppercase tracking-widest mb-4"
           >
             Platform Capabilities
           </motion.h2>
           
+          {/* CORE OFFERINGS HEADING (Now using font-serif to perfectly match Trade/Invest) */}
           <motion.h3 
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, amount: 0.2 }}
             transition={{ duration: 0.8, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
-            className="text-4xl md:text-5xl lg:text-[4.5rem] font-heading text-[#222222] tracking-tighter leading-none mb-6"
+            className="text-5xl md:text-6xl lg:text-[4.5rem] font-serif text-[#222222] tracking-tight leading-none mb-6"
           >
             Our Core Offerings
           </motion.h3>
@@ -120,26 +121,24 @@ export default function CoreOfferings() {
               className="group relative block w-full max-w-[1200px] mx-auto h-[160px] md:h-[180px] cursor-pointer"
             >
               
-              {/* NO WHITE PILL ANYMORE - Seamless blending with background */}
-
               {/* Layout Grid: 1fr (Icon) | auto (Text) | 1fr (Desc) */}
               <div className="relative z-10 grid grid-cols-[1fr_auto_1fr] items-center w-full h-full pointer-events-none">
 
-                {/* Left Column: Icon (Added larger padding pr-12 lg:pr-24 for exact Wealthsimple spacing) */}
+                {/* Left Column: Icon */}
                 <div className="flex justify-end pr-12 lg:pr-24 opacity-0 group-hover:opacity-100 transform -translate-x-4 group-hover:translate-x-0 transition-all duration-500">
                   <div className="w-14 h-14 md:w-16 md:h-16 bg-[#F4F4F0] rounded-2xl flex items-center justify-center border border-black/5 text-[#222]">
                     {item.icon}
                   </div>
                 </div>
 
-                {/* Center Column: STATIC TITLE (Massive size, no hover shrinking) */}
+                {/* Center Column: STATIC TITLE (Elegant font-serif) */}
                 <div className="flex justify-center whitespace-nowrap">
                   <h3 className="text-6xl md:text-[6rem] lg:text-[7.5rem] font-serif text-[#222] tracking-tight leading-none group-hover:text-black transition-colors duration-500">
                     {item.title}
                   </h3>
                 </div>
 
-                {/* Right Column: Info (Added larger padding pl-12 lg:pl-24 and restored vertical dividing line) */}
+                {/* Right Column: Info */}
                 <div className="justify-start pl-12 lg:pl-24 opacity-0 group-hover:opacity-100 transform translate-x-4 group-hover:translate-x-0 transition-all duration-500 hidden md:flex items-center">
                   
                   {/* Vertical Dividing Line */}
@@ -149,7 +148,7 @@ export default function CoreOfferings() {
                     <p className="text-[13px] md:text-[14px] font-sans font-medium text-[#444] leading-[1.6] mb-3">
                       {item.desc}
                     </p>
-                    <span className="flex items-center gap-1 text-[11px] md:text-[12px] font-bold font-sans text-primary uppercase tracking-widest">
+                    <span className="flex items-center gap-1 text-[11px] md:text-[12px] font-bold font-sans text-[#84C225] uppercase tracking-widest">
                       {item.linkText} <ArrowRight size={14} />
                     </span>
                   </div>
