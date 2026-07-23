@@ -121,7 +121,8 @@ export default function Feature() {
               Fearless Finance Mastery
             </h4>
             
-            <h2 className="text-5xl md:text-6xl lg:text-[5rem] font-sans font-black text-[#1A1A1A] tracking-tighter leading-[1.05] mb-6">
+            {/* UPDATED: Changed from font-sans font-black to font-serif */}
+            <h2 className="text-5xl md:text-6xl lg:text-[5rem] font-serif text-[#1A1A1A] tracking-tighter leading-[1.05] mb-6">
               Sophisticated, <br />
               Yet Fearless.
             </h2>

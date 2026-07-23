@@ -14,7 +14,7 @@ const eventsData = [
 
 const duplicatedEvents = [...eventsData, ...eventsData, ...eventsData];
 
-// 🎞️ THE FILM FRAME (No Hover Scale, Only 3D Click Flip)
+// 🎞️ THE FILM FRAME
 const FilmFrame = ({ event }) => {
   const [isFlipped, setIsFlipped] = useState(false);
 
@@ -38,7 +38,7 @@ const FilmFrame = ({ event }) => {
             <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0a] via-transparent to-transparent opacity-90"></div>
             
             <div className="absolute bottom-6 left-6 right-6">
-              <h4 className="text-white font-heading font-black text-xl md:text-2xl tracking-tight leading-tight drop-shadow-lg">
+              <h4 className="text-white font-sans font-black text-xl md:text-2xl tracking-tight leading-tight drop-shadow-lg">
                 {event.title}
               </h4>
             </div>
@@ -48,7 +48,7 @@ const FilmFrame = ({ event }) => {
           <div className="absolute inset-0 backface-hidden rotate-y-180 bg-[#1A1A1A] border-4 border-[#0a0a0a] p-6 flex flex-col justify-between">
             <div>
               <div className="flex justify-between items-start mb-6 border-b border-white/10 pb-4">
-                <h4 className="text-[#84C225] font-heading font-black text-lg md:text-xl tracking-tight leading-tight">
+                <h4 className="text-[#84C225] font-sans font-black text-lg md:text-xl tracking-tight leading-tight">
                   {event.title}
                 </h4>
                 <div className="w-7 h-7 rounded-full bg-white/5 flex items-center justify-center shrink-0 transition-colors hover:bg-white/20">
@@ -89,8 +89,6 @@ const FilmFrame = ({ event }) => {
 export default function EventsGallery() {
   return (
     <section className="bg-[#3B3531] relative z-20 py-24 md:py-36 overflow-hidden border-t border-white/5">
-      
-      {/* Removed the AmbientBackground and dynamic radial gradients entirely */}
       
       <style>{`
         .perspective-1000 { perspective: 1000px; }
@@ -136,10 +134,11 @@ export default function EventsGallery() {
       <div className="relative z-10 w-full flex flex-col items-center">
         
         <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-100px" }} transition={{ duration: 0.8 }} className="max-w-4xl mx-auto px-6 text-center mb-16 md:mb-24">
-          <h2 className="text-3xl md:text-5xl lg:text-[3.5rem] font-heading font-black text-white tracking-tight leading-[1.1] md:leading-[1.2]">
+          {/* UPDATED: Changed font-heading font-black to font-serif to match the Core Offerings theme perfectly */}
+          <h2 className="text-4xl md:text-5xl lg:text-6xl font-serif text-white tracking-tight leading-[1.1] md:leading-[1.2]">
             There aren't many trusted and awarded <br className="hidden md:block"/> 
             <span className="text-[#84C225]">Option Delta Hedging</span> training companies in India. <br className="hidden md:block"/>
-            <span className="text-white/60 font-medium text-xl md:text-3xl block mt-4 md:mt-6">It takes honesty and hard work to reach here.</span>
+            <span className="text-white/60 font-sans font-medium text-xl md:text-3xl block mt-6 md:mt-8">It takes honesty and hard work to reach here.</span>
           </h2>
         </motion.div>
 
